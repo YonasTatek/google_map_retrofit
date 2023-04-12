@@ -1,0 +1,82 @@
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
+}
+
+android {
+    namespace "com.google.maps.android.compose"
+    compileSdk 33
+
+    defaultConfig {
+        minSdk 21
+        targetSdk 33
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion libs.versions.composecompiler.get()
+    }
+
+    buildFeatures {
+        buildConfig true
+        compose true
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+        freeCompilerArgs += '-Xopt-in=kotlin.RequiresOptIn'
+    }
+}
+
+dependencies {
+    implementation platform(libs.androidx.compose.bom)
+    implementation libs.androidx.compose.activity
+    implementation libs.androidx.compose.foundation
+    implementation libs.androidx.compose.material
+    implementation libs.kotlin
+    implementation libs.material
+    implementation libs.maps.ktx.std
+    implementation libs.maps.utils
+    implementation libs.androidx.compose.ui.preview.tooling
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation "com.squareup.okhttp3:okhttp:5.0.0-alpha.2"
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    debugImplementation libs.androidx.compose.ui.tooling
+    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1"
+    implementation "androidx.navigation:navigation-compose:2.5.3"
+    androidTestImplementation platform(libs.androidx.compose.bom)
+    androidTestImplementation libs.androidx.test.core
+    androidTestImplementation libs.androidx.test.rules
+    androidTestImplementation libs.androidx.test.runner
+    androidTestImplementation libs.androidx.test.espresso
+    androidTestImplementation libs.androidx.test.junit.ktx
+    androidTestImplementation libs.test.junit
+    androidTestImplementation libs.androidx.test.compose.ui
+    androidTestImplementation libs.coroutines
+
+    // Uncomment the implementation 'com.google...` declaration and comment out the project
+    // declaration if you want to test the sample app with a Maven Central release of the library.
+    //implementation  "com.google.maps.android:maps-compose:2.2.1"
+    implementation project(':maps-compose')
+    //implementation  "com.google.maps.android:maps-compose-widgets:1.0.0"
+    implementation project(':maps-compose-widgets')
+    //implementation  "com.google.maps.android:maps-compose-utils:1.0.0"
+    implementation project(':maps-compose-utils')
+    implementation libs.maps.playservice
+}
+
+secrets {
+    // To add your Maps API key to this project:
+    // 1. Add this line to your local.properties file, where YOUR_API_KEY is your API key:
+    //        MAPS_API_KEY=YOUR_API_KEY
+    defaultPropertiesFileName 'local.defaults.properties'
+}

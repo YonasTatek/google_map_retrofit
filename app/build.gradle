@@ -27,6 +27,7 @@ android {
     }
 
     buildFeatures {
+
         buildConfig true
         compose true
     }
@@ -34,6 +35,14 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
         freeCompilerArgs += '-Xopt-in=kotlin.RequiresOptIn'
+    }
+
+    buildTypes {
+        getByName("release") {
+            minifyEnabled = true
+            shrinkResources = true
+            proguardFiles(getDefaultProguardFile('proguard-android.txt'), "proguard-rules.pro")
+        }
     }
 }
 

@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 class MainViewModel : ViewModel() {
     var movieListResponse:List<MapDataItem> by mutableStateOf(listOf())
     var errorMessage: String by mutableStateOf("")
-    var countryValue:String by mutableStateOf("egypt")
+    var countryValue:String by mutableStateOf("")
     var LocationUiState:Location by mutableStateOf(
         Location(
             lat = "10",

@@ -53,6 +53,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -78,10 +79,12 @@ val defaultCameraPosition = CameraPosition.fromLatLngZoom(singapore, 11f)
 class BasicMapActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
         setContent {
             val navController = rememberNavController()
             val mainViewModel: MainViewModel = viewModel()
+
             NavHost(navController = navController, startDestination = "home") {
                 composable("home") { SearchScreen(navHostController = navController, mainViewModel = mainViewModel) }
                 composable("map") { MapHome(navHostController = navController,mainViewModel = mainViewModel)  }
@@ -106,6 +109,8 @@ class BasicMapActivity : ComponentActivity() {
 @Composable
 fun MapHome(navHostController: NavHostController ,mainViewModel: MainViewModel = viewModel()){
     var isMapLoaded by remember { mutableStateOf(false) }
+    val currentLocation = LatLng(mainViewModel.LocationUiState.lat.toDouble(), mainViewModel.LocationUiState.lon.toDouble())
+    val defaultCameraPosition = CameraPosition.fromLatLngZoom(currentLocation, 11f)
     // Observing and controlling the camera's state can be done with a CameraPositionState
     val cameraPositionState = rememberCameraPositionState {
         position = defaultCameraPosition
@@ -230,22 +235,7 @@ fun GoogleMapView(
             Log.d("GoogleMap", "Selected map type $it")
             mapProperties = mapProperties.copy(mapType = it)
         })
-        Row {
-//            MapButton(
-//                text = "Reset Map",
-//                onClick = {
-//                    mapProperties = mapProperties.copy(mapType = MapType.NORMAL)
-//                    cameraPositionState.position = defaultCameraPosition
-//                    singaporeState.position = singapore
-//                    singaporeState.hideInfoWindow()
-//                }
-//            )
-//            MapButton(
-//                text = "Toggle Map",
-//                onClick = { mapVisible = !mapVisible },
-//                modifier = Modifier.testTag("toggleMapVisibility"),
-//            )
-        }
+
         val coroutineScope = rememberCoroutineScope()
       /*  ZoomControls(
             shouldAnimateZoom,
@@ -357,13 +347,10 @@ private fun DebugView(
     ) {
         val moving =
             if (cameraPositionState.isMoving) "moving" else "not moving"
-//        Text(text = "Camera is $moving")
-//        Text(text = "Camera position is ${cameraPositionState.position}")
         Spacer(modifier = Modifier.height(4.dp))
         val dragging =
             if (markerState.dragState == DragState.DRAG) "dragging" else "not dragging"
-//        Text(text = "Marker is $dragging")
-//        Text(text = "Marker position is ${markerState.position}")
+
     }
 }
 

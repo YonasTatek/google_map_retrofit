@@ -13,7 +13,18 @@ import kotlinx.coroutines.launch
 
 
 
+
+enum class SearchStatus{
+    Loading,
+    Success,
+    Error,
+    Initial
+ }
+
 class MainViewModel : ViewModel() {
+    var searchStatus:SearchStatus by mutableStateOf(
+        SearchStatus.Initial
+    )
     var movieListResponse:List<MapDataItem> by mutableStateOf(listOf())
     var errorMessage: String by mutableStateOf("")
     var countryValue:String by mutableStateOf("")
@@ -35,17 +46,25 @@ class MainViewModel : ViewModel() {
     fun getMapList() {
 
         viewModelScope.launch {
-
-            val apiService = ApiService.getInstance()
             try {
+
+                searchStatus = SearchStatus.Loading
+                val apiService = ApiService.getInstance()
                 val movieList = apiService.getMap(country = countryValue)
                 movieListResponse = movieList
+                if(movieList.isNotEmpty())
+                    searchStatus = SearchStatus.Success
+                else
+                    searchStatus = SearchStatus.Error
+
+
             }
             catch (e: Exception) {
+                searchStatus = SearchStatus.Error
                 Log.d("viewModelMessage error",movieListResponse.toString())
                 errorMessage = e.message.toString()
             }
-            Log.d("viewModelMessage",movieListResponse.toString())
+            Log.d("viewModelMessage",searchStatus.name)
         }
     }
 
